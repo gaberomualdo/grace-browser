@@ -1,20 +1,13 @@
 var allTabs = ["https://google.com"];
 
 $(function(){
-	updateDragWidth();
 	updateEvents();
-
-	if(isMac){
-		$("#dragArea").css("right","0");
-		$("#windowBtns").remove();
-		$("#tabs").attr("style","padding-left:12.5vh;");
-	}
 });
 
 function addTab(url){
 	allTabs.push(url);
 	$("#tabs div.activeTab").removeClass("activeTab");
-	$("<div class='activeTab'><h1>New Tab</h1><span></span></div>").insertAfter($("#tabs div:eq(" + (allTabs.length-2) +")"));
+	$('<div class="activeTab"><h1>New Tab</h1><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg></span></div>').insertAfter($("#tabs div:eq(" + (allTabs.length-2) +")"));
 
 	$("#web webview.activeWeb").removeClass("activeWeb");
 	$("<webview class='activeWeb' src='" + url + "'></webview>").insertAfter($("#web webview:eq(" + (allTabs.length-2) +")"));
@@ -27,7 +20,6 @@ function addTab(url){
 	}
 
 	updateEvents();
-	updateDragWidth();
 }
 function removeTab(index){
 	allTabs.splice(index,1);
@@ -139,14 +131,8 @@ function updateEvents(){
 		if(!$("#topbar input:eq(" + index + ")").is(":focus")){
 			$("#topbar input:eq(" + index + ")").val($(this).attr("src"));
 		}
-		var fakeA = document.createElement("a");
-		fakeA.href = $(this).attr("src");
-		fakeA = fakeA.hostname;
-		if(fakeA.startsWith("www.")){
-			fakeA = fakeA.replace("www.","");
-		}
-		$("#tabs div h1:eq(" + index + ")").text(fakeA);
-		updateDragWidth();
+		
+		$("#tabs div h1:eq(" + index + ")").text(this.getTitle());
 	});
 
 	$("#web webview.activeWeb")[0].addEventListener("new-window",(e) => {
@@ -159,21 +145,8 @@ function updateEvents(){
 	});
 }
 
-function updateDragWidth(){
-	$("#dragArea").css("width","0");
-	if(isMac){
-		$("#dragArea").css("width","calc(100vw - " + $("#tabs").outerWidth() + "px)");
-	}else{
-		$("#dragArea").css("width","calc(100vw - 22.5vh - " + $("#tabs").outerWidth() + "px)");
-	}
-}
-
 $("#tabs button.addTab").on("click",function(){
 	addTab("https://google.com");
-});
-
-$(document).on("resize",function(e){
-	updateDragWidth();
 });
 
 $("#topbar button.back").on("click",function(){

@@ -8,43 +8,6 @@ if (process.platform == 'darwin') {
   isMac = true;
 }
 
-if(remote.getCurrentWindow().isMaximized()){
-	$("section#windowBtns .maximize").addClass("maximized");
-}
-
-$("section#windowBtns .minimize").on("click",function(){
-	var window = remote.getCurrentWindow();
-	window.minimize();	
-});
-
-$("section#windowBtns .maximize").on("click",function(){
-	var window = remote.getCurrentWindow();
-	if (!window.isMaximized()){
-		window.maximize();
-	}else{
-		window.unmaximize();
-	}
-});
-
-$("section#windowBtns .close").on("click",function(){
-	var window = remote.getCurrentWindow();
-	window.close();
-});
-
-remote.getCurrentWindow().on('maximize', function() {
-	$("section#windowBtns .maximize").addClass("maximized");
-});
-remote.getCurrentWindow().on('unmaximize', function() {
-	$("section#windowBtns .maximize").removeClass("maximized");
-});
-
-remote.getCurrentWindow().on('enter-full-screen', function() {
-	$("#tabs").removeAttr("style");
-});
-remote.getCurrentWindow().on('leave-full-screen', function() {
-	$("#tabs").attr("style","padding-left:12.5vh;");
-});
-
 Mousetrap.prototype.stopCallback = function(){
 	return false;
 }
