@@ -1,0 +1,214 @@
+* {
+	margin: 0;
+	padding: 0;
+	font-family: "Arial","Ubuntu",sans-serif;
+}
+:root {
+	--main: #3498db;
+}
+body {
+	overflow-x: hidden;
+}
+#topbar,#tabs {
+	height: 7vh;
+	display: block;
+	text-align: center;
+	background-color: #fefefe;
+	float: left;
+}
+#topbar {
+	width: 100%;
+	border-bottom: 2px solid #ccc;
+	padding-left: 0.5vh;
+}
+#topbar input,#topbar button {
+	margin: 1vh 0.5vh;
+	height: 5vh;
+	width: 5vh;
+	box-sizing: border-box;
+	padding: 0 1vh;
+	font-size: 1rem;
+	background-color: white;
+	outline: none;
+	transition: border-color 0.2s;
+	border: 2px solid #ccc;
+	vertical-align: text-top;
+	float: left;
+}
+#topbar input {
+	margin-right: 0;
+	width: calc(100% - 18.5vh - 12px);
+}
+#topbar input:focus,#topbar button:hover{
+	border-color: var(--main);
+}
+#topbar input:not(.activeInput){
+	display: none;
+}
+#topbar button {
+	background-size: 2.5vh;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+#topbar button.back{
+	background-image: url(../img/backIcon.png);
+}
+#topbar button.forward{
+	background-image: url(../img/forwardIcon.png);
+}
+#topbar button.reload{
+	background-image: url(../img/reloadIcon.png);
+}
+
+#tabs {
+	--height: 5vh;
+	display: inline-block;
+	height: 5vh;
+	box-sizing: border-box;
+	border-bottom: 2px solid #ccc;
+	padding: 0 3.5vh;
+	background-color: white;
+}
+#dragArea {
+	height: 5vh;
+	position: absolute;
+	top: 0;
+	right: 22.5vh;
+	background-color: white;
+	box-sizing: border-box;
+	border-bottom: 2px solid #ccc;
+	-webkit-app-region: drag;
+}
+section#windowBtns{
+	height: 5vh;
+	width: 22.5vh;
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 9999;
+}
+section#windowBtns button {
+	outline: none;
+	width: 7.5vh;
+	height: 5vh;
+	display: block;
+	float: right;
+	border-radius: 0;
+	background-color: #fff;
+	border: none;
+	border-bottom: 2px solid #ccc;
+	background-size: 2.5vh;
+	background-position: center;
+	background-repeat: no-repeat;
+	transition: background-color 0.2s;
+}
+section#windowBtns button:hover{
+	background-color: #ccc;
+}
+section#windowBtns button:active{
+	transition: background-color 0s;
+	background-color: #bbb;
+}
+section#windowBtns button.minimize {
+	background-image: url(../img/minimizeIcon.png);
+}
+section#windowBtns button.maximize {
+	background-image: url(../img/maximizeIcon.png);
+}
+section#windowBtns button.maximize.maximized{
+	background-image: url(../img/unmaximizeIcon.png);
+}
+section#windowBtns button.close {
+	transition: background-color 0s;
+	background-image: url(../img/closeIcon.png);
+}
+section#windowBtns button.close:hover{
+	background-color: #e00;
+	background-image: url(../img/closeHoverIcon.png);
+}
+
+#tabs div {
+	background-color: #efefef;
+	height: calc(var(--height) - 2px);
+	padding: 0 1.25vh;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	border-top: none;
+	border-bottom: none;
+	display: inline-block;
+	vertical-align: text-top;
+	float: left;
+	margin-left: -2px;
+}
+#tabs div.activeTab{
+	height: var(--height);
+	background-color: #fefefe;
+}
+#tabs div.activeTab span:hover{
+	opacity: 0.8;
+}
+#tabs div:hover{
+	cursor: default;
+}
+#tabs div h1 {
+	font-weight: normal;
+	font-size: 2.375vh;
+	padding-top: 2px;
+	line-height: calc(var(--height) - 2px);
+	display: block;
+	float: left;
+}
+#tabs div span {
+	display: block;
+	float: left;
+	margin: calc(var(--height) / 4);
+	margin-top: calc((var(--height) / 4) - 1px);
+	margin-right: 0;
+	height: calc(var(--height) / 2);
+	width: calc(var(--height) / 2);
+	background-image: url(../img/closeLargeIcon.png);
+	background-size: 75%;
+	background-position: center;
+	background-repeat: no-repeat;
+	transition: background-color 0.15s;
+}
+#tabs div span:hover{
+	background-color: #ccc;
+}
+#tabs div span:active{
+	background-color: #bbb;
+}
+
+
+#tabs button.addTab {
+	outline: none;
+	width: 4vh;
+	height: 3vh;
+	margin: 1vh;
+	margin-top: calc(1vh - 0.5px);
+	display: inline-block;
+	float: left;
+	vertical-align: text-top;
+	background-color: #efefef;
+	border: 2px solid #ccc;
+}
+#tabs button.addTab:hover {
+	background-color: #dedede;
+}
+#tabs button.addTab:active {
+	background-color: #ccc;
+}
+
+#web webview {
+	height: calc(88vh - 4px);
+	width: 100vw;
+}
+
+#web webview object {
+	width: 100vw;
+	height: 100%;
+}
+
+#web webview:not(.activeWeb){
+	display: none;
+}

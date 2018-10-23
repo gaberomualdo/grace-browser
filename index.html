@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Grace</title>
+
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+
+<body>
+	<div id="tabs">
+		<div class='activeTab'><h1>google.com</h1><span></span></div>
+		<button class="addTab"></button>
+	</div>
+	<div id="dragArea"></div>
+	<div id="topbar">
+		<button class='back'></button
+		><button class='forward'></button
+		><button class='reload'></button>
+		<input class='activeInput' type="text" placeholder="Type URL or Search Google..." autofocus>
+	</div>
+	<div id="web">
+		<webview src='http://google.com' class='activeWeb'></webview>
+	</div>
+
+	<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/mousetrap.min.js"></script>
+	<script>if (window.module) module = window.module;</script>
+	<script src="assets/js/script.js"></script>
+	<script src="assets/js/app.js"></script>
+</body>
+
+</html>
