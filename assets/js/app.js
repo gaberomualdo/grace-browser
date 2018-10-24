@@ -153,12 +153,15 @@ function updateEvents(){
 				$("#topbar input:eq(" + index + ")").val($(this).attr("src"));
 			}
 		}
-		
-		$("#tabs div h1:eq(" + index + ")").text(this.getTitle());
 	});
 
 	$("#web webview.activeWeb")[0].addEventListener("new-window",(e) => {
 		addTab(e.url);
+	});
+	$("#web webview.activeWeb")[0].addEventListener("page-title-updated",(e) => {
+		var index = $("#web webview").index($(this));
+
+		$("#tabs div h1:eq(" + index + ")").text(e.title);
 	});
 	$("#web webview.activeWeb")[0].addEventListener("page-favicon-updated",(e) => {
 		var index = $("#web webview").index($(this));
