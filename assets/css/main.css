@@ -14,10 +14,6 @@ input {
 	color: #222;
 }
 
-/*
-http://jsfiddle.net/KFrun/171/
-*/
-
 #tabs, #topbar {
 	width: 100vw;
 	height: 3rem;
@@ -51,18 +47,28 @@ http://jsfiddle.net/KFrun/171/
 	width: 12.5rem;
 	overflow-x: hidden;
 	white-space: nowrap;
+	cursor: default;
 }
-#tabs div h1, #tabs div span {
+#tabs div h1, #tabs div span, #tabs div img {
 	display: block;
 	float: left;
 }
-#tabs div span {
+#tabs div span, #tabs div img {
 	height: 1.5rem;
 	width: 1.5rem;
 	padding: 0.4rem;
 	box-sizing: border-box;
 	border-radius: 50%;
 	margin-left: 0.5rem;
+}
+#tabs div img {
+	margin-left: 0;
+	border-radius: 0;
+	padding: 0.25rem;
+	width: auto;
+	max-width: 2.5rem;
+	image-rendering: crisp-edges;
+	margin-right: 0.5rem;
 }
 #tabs div span:hover{
 	background-color: #c0c0c0;

@@ -3,15 +3,16 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Grace</title>
+	<title>Grace: The Browser of the Future</title>
 
 	<link rel="stylesheet" href="assets/css/main.css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
+	<style id="h1WidthStyle"></style>
 </head>
 
 <body>
 	<div id="tabs">
-		<div class='activeTab'><h1>Google</h1><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg></span></div>
+		<div class='activeTab'><img src="favicon.png"><h1>Grace: The Browser of the Future</h1><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg></span></div>
 		<button class="addTab">
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 9h-9v-9h-6v9h-9v6h9v9h6v-9h9z"/></svg>
 		</button>
@@ -23,7 +24,7 @@
 		<input class='activeInput' type="text" placeholder="Type URL or Search Google..." autofocus>
 	</div>
 	<div id="web">
-		<webview src='http://google.com' class='activeWeb'></webview>
+		<webview src='homepage.html' class='activeWeb'></webview>
 	</div>
 
 	<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>

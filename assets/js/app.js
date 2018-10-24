@@ -1,13 +1,30 @@
-var allTabs = ["https://google.com"];
+var allTabs = ["homepage.html"];
 
 $(function(){
 	updateEvents();
 });
 
+$(document).on("resize",function(e){
+	updateTabWidth();
+});
+
+function updateTabWidth(){
+	let remSize = getComputedStyle(document.documentElement).fontSize;
+	remSize = remSize.split("px").join("");
+	if((window.innerWidth - ((remSize * 17.75) * allTabs.length + (remSize * 3))) < 0){
+		h1Width = window.innerWidth - (remSize * 3);
+		h1Width = h1Width / allTabs.length;
+		h1Width = h1Width - (remSize * 6.25);
+		if(h1Width > 0){
+			$("#h1WidthStyle").html("#tabs div h1 { width: " + h1Width + "px }");
+		}
+	}
+}
+
 function addTab(url){
 	allTabs.push(url);
 	$("#tabs div.activeTab").removeClass("activeTab");
-	$('<div class="activeTab"><h1>New Tab</h1><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg></span></div>').insertAfter($("#tabs div:eq(" + (allTabs.length-2) +")"));
+	$('<div class="activeTab"><img src="favicon.png"><h1>New Tab</h1><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg></span></div>').insertAfter($("#tabs div:eq(" + (allTabs.length-2) +")"));
 
 	$("#web webview.activeWeb").removeClass("activeWeb");
 	$("<webview class='activeWeb' src='" + url + "'></webview>").insertAfter($("#web webview:eq(" + (allTabs.length-2) +")"));
@@ -15,11 +32,12 @@ function addTab(url){
 	$("#topbar input.activeInput").removeClass("activeInput");
 	$('<input class="activeInput" type="text" placeholder="Type URL or Search Google...">').insertAfter($("#topbar input:eq(" + (allTabs.length-2) +")"));
 
-	if(url == "https://google.com"){
+	if(url == "homepage.html"){
 		$("#topbar input.activeInput").focus();
 	}
 
 	updateEvents();
+	updateTabWidth();
 }
 function removeTab(index){
 	allTabs.splice(index,1);
@@ -42,7 +60,7 @@ function removeTab(index){
 		}
 	}
 
-	updateDragWidth();
+	updateTabWidth();
 }
 function updateEvents(){
 	$('#tabs div span').off('click');
@@ -129,7 +147,11 @@ function updateEvents(){
 	$("#web webview").on("did-stop-loading",function(){
 		var index = $("#web webview").index($(this));
 		if(!$("#topbar input:eq(" + index + ")").is(":focus")){
-			$("#topbar input:eq(" + index + ")").val($(this).attr("src"));
+			if($(this).attr("src").endsWith("homepage.html")){
+				$("#topbar input:eq(" + index + ")").val("");
+			}else{
+				$("#topbar input:eq(" + index + ")").val($(this).attr("src"));
+			}
 		}
 		
 		$("#tabs div h1:eq(" + index + ")").text(this.getTitle());
@@ -137,6 +159,11 @@ function updateEvents(){
 
 	$("#web webview.activeWeb")[0].addEventListener("new-window",(e) => {
 		addTab(e.url);
+	});
+	$("#web webview.activeWeb")[0].addEventListener("page-favicon-updated",(e) => {
+		var index = $("#web webview").index($(this));
+
+		$("#tabs div img:eq(" + index + ")").attr("src", e.favicons[0]);
 	});
 
 	$("#topbar input").off("focus");
@@ -146,7 +173,7 @@ function updateEvents(){
 }
 
 $("#tabs button.addTab").on("click",function(){
-	addTab("https://google.com");
+	addTab("homepage.html");
 });
 
 $("#topbar button.back").on("click",function(){

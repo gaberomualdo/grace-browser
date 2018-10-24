@@ -76,6 +76,10 @@ Mousetrap.bind(['ctrl+r', 'command+r'],function(e){
 	}
 	return false;
 });
+Mousetrap.bind(['ctrl+t', 'command+t'],function(e){
+	addTab("homepage.html");
+	return false;
+});
 
 Mousetrap.bind(['ctrl+w', 'command+w'],function(e){
 	removeTab($("#tabs div").index($("#tabs div.activeTab"))

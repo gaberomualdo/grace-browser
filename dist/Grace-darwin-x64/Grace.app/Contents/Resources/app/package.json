@@ -1,0 +1,21 @@
+{
+  "name": "Grace",
+  "productName": "Grace",
+  "version": "1.0.0",
+  "description": "A simple, clean web browser where users can create their own websites for free with a \".grace\" domain name.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Fred Adams",
+  "license": "CC0-1.0",
+  "pack:osx": "electron-packager . $npm_package_productName --out=dist/osx --platform=darwin --arch=x64 --icon=assets/build/osx/icon.icns",
+  "pack:win32": "electron-packager . $npm_package_productName --out=dist/win --platform=win32 --arch=ia32",
+  "pack:win64": "electron-packager . $npm_package_productName --out=dist/win --platform=win32 --arch=x64 --version=0.36.2 app-version=1.0 --icon=icon.ico",
+  "build": "npm run pack:osx && npm run pack:win32 && npm run pack:win64",
+  "devDependencies": {
+    "electron": "^2.0.0",
+    "electron-builder": "^20.4.1",
+    "electron-packager": "^11.1.0"
+  }
+}
