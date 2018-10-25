@@ -66,10 +66,11 @@
 	console.clear();
 	function checkOnline(){
 		if(navigator.onLine){
-			if(process.mainModule.filename.indexOf('app.asar') === -1){
-				window.location.href = "index.html";
+			let extraData = "?back=" + encodeURIComponent(window.location.href);
+			if(process.mainModule.filename.indexOf('.app') === -1){
+				window.location.href = "index.html" + extraData;
 			}else{
-				window.location.href = "https://xtrp.github.io/grace/index.html";
+				window.location.href = "https://xtrp.github.io/grace/index.html" + extraData;
 			}
 		}
 	}
