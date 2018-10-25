@@ -2,12 +2,6 @@ const remote = require('electron').remote;
 
 const {clipboard} = require('electron')
 
-var isMac = false;
-
-if (process.platform == 'darwin') {
-  isMac = true;
-}
-
 Mousetrap.prototype.stopCallback = function(){
 	return false;
 }
@@ -37,8 +31,8 @@ Mousetrap.bind(['ctrl+v', 'command+v'],function(e){
 			$("#topbar input.activeInput:focus")[0].value = textAreaTxt.substring(0, selectStart) + clipboard.readText() + textAreaTxt.substring(selectEnd);
 		}else{
 			var caretPos = $("#topbar input.activeInput:focus")[0].selectionStart;
-		var textAreaTxt = $("#topbar input.activeInput:focus")[0].value;
-		$("#topbar input.activeInput:focus")[0].value = textAreaTxt.substring(0, caretPos) + clipboard.readText() + textAreaTxt.substring(caretPos);
+			var textAreaTxt = $("#topbar input.activeInput:focus")[0].value;
+			$("#topbar input.activeInput:focus")[0].value = textAreaTxt.substring(0, caretPos) + clipboard.readText() + textAreaTxt.substring(caretPos);
 		}
 	}else{
 		$("#web webview.activeWeb")[0].paste();

@@ -7,6 +7,8 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
+const appMenu = electron.Menu;
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -20,7 +22,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
+    pathname: path.join(__dirname, 'offline.html'),
     protocol: 'file:',
     slashes: true
   }))
@@ -40,7 +42,86 @@ function createWindow () {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', function(){
+  createWindow();
+
+  const template = [
+    {
+      label: "Grace",
+      submenu: [
+        {
+          label: "About Grace",
+          selector: "orderFrontStandardAboutPanel:"
+        },
+        {
+          type: "separator"
+        },
+        {
+          label: "Reload Grace",
+          accelerator: "CmdOrCtrl+Option+R",
+          click: function(){
+            mainWindow.reload();
+          }
+        },
+        {
+          label: "Open Dev Tools",
+          accelerator: "CmdOrCtrl+Option+E",
+          click: function(){
+            mainWindow.toggleDevTools();
+          }
+        },
+        {
+          label: "Quit Grace",
+          accelerator: "CmdOrCtrl+Q",
+          click: function(){
+            app.quit();
+          }
+        }
+      ]
+    },
+    {
+      label: "Edit",
+      submenu: [
+        {
+          label: "Undo",
+          accelerator: "CmdOrCtrl+Z",
+          selector: "undo:"
+        },
+        {
+          label: "Redo",
+          accelerator: "Shift+CmdOrCtrl+Z",
+          selector: "redo:"
+        },
+        {
+          type: "separator"
+        },
+        {
+          label: "Cut",
+          accelerator: "CmdOrCtrl+X",
+          selector: "cut:"
+        },
+        {
+          label: "Copy",
+          accelerator: "CmdOrCtrl+C",
+          selector: "copy:"
+        },
+        {
+          label: "Paste",
+          accelerator: "CmdOrCtrl+V",
+          selector: "paste:"
+        },
+        {
+          label: "Select All",
+          accelerator: "CmdOrCtrl+A",
+          selector: "selectAll:"
+        }
+      ]
+    }
+  ]
+
+  const menu = appMenu.buildFromTemplate(template);
+  appMenu.setApplicationMenu(menu);
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

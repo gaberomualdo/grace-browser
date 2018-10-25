@@ -8,6 +8,19 @@ $(document).on("resize",function(e){
 	updateTabWidth();
 });
 
+function checkForwardBackwardBtns(){
+	if(!$("#web webview.activeWeb")[0].canGoForward()){
+		$("#topbar button.forward").addClass("disabled");
+	}else{
+		$("#topbar button.forward").removeClass("disabled");
+	}
+	if(!$("#web webview.activeWeb")[0].canGoBack()){
+		$("#topbar button.back").addClass("disabled");
+	}else{
+		$("#topbar button.back").removeClass("disabled");
+	}
+}
+
 function updateTabWidth(){
 	let remSize = getComputedStyle(document.documentElement).fontSize;
 	remSize = remSize.split("px").join("");
@@ -18,13 +31,15 @@ function updateTabWidth(){
 		if(h1Width > 0){
 			$("#h1WidthStyle").html("#tabs div h1 { width: " + h1Width + "px }");
 		}
+	}else{
+		$("#h1WidthStyle").html("");
 	}
 }
 
 function addTab(url){
 	allTabs.push(url);
 	$("#tabs div.activeTab").removeClass("activeTab");
-	$('<div class="activeTab"><img src="favicon.png"><h1>New Tab</h1><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg></span></div>').insertAfter($("#tabs div:eq(" + (allTabs.length-2) +")"));
+	$('<div class="activeTab"><img src="assets/img/loader.gif" onerror="this.setAttribute(\"src\",\"favicon.png\")"><h1>New Tab</h1><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg></span></div>').insertAfter($("#tabs div:eq(" + (allTabs.length-2) +")"));
 
 	$("#web webview.activeWeb").removeClass("activeWeb");
 	$("<webview class='activeWeb' src='" + url + "'></webview>").insertAfter($("#web webview:eq(" + (allTabs.length-2) +")"));
@@ -81,6 +96,7 @@ function updateEvents(){
 
 		$("#topbar input.activeInput").removeClass("activeInput");
 		$("#topbar input:eq(" + index + ")").addClass("activeInput");
+		checkForwardBackwardBtns();
 	});
 
 	$("#topbar input").off("keydown");
@@ -118,6 +134,7 @@ function updateEvents(){
 
 		if(e.keyCode == 13){
 			var url = $(this).val();
+			$(this).blur();
 
 			if(url.indexOf(" ") != -1 || url.indexOf(".") == -1){
 				var searchEngine = searchEngines.indexOf(url.split(" ")[0]);
@@ -128,23 +145,41 @@ function updateEvents(){
 					url = url.substring(1);
 					url = searchEngineStart[searchEngine] + url;
 				}else{
-					url = "http://google.com/search?q=" + url;
+					url = "https://google.com/search?q=" + url;
 				}
 			}
 			if(!url.startsWith("http://") && !url.startsWith("file://") && !url.startsWith("https://")){
-				url = "http://" + url;	
+				url = "https://" + url;	
 			}
 
 			var index = $("#tabs div").index($("#tabs div.activeTab"));
 
 			$("#web webview:eq(" + index + ")")[0].loadURL(url);
-
-			$(this).blur();
+			$("#web webview:eq(" + index + ")")[0].focus();
 		}
+	});
+
+	$("#web webview").off("dom-ready");
+	$("#web webview").on("dom-ready",function(){
+		var index = $("#web webview").index($(this));
+		if($("#tabs div img:eq(" + index + ")").attr("src") == "assets/img/loader.gif"){
+			$("#tabs div img:eq(" + index + ")").attr("src", "favicon.png");
+		}
+	});
+
+	$("#web webview.activeWeb")[0].addEventListener("page-title-updated",(e) => {
+		var index = $("#web webview").index($(this));
+		$("#tabs div h1:eq(" + index + ")").text(e.title);
+	});
+	$("#web webview.activeWeb")[0].addEventListener("page-favicon-updated",(e) => {
+		var index = $("#web webview").index($(this));
+
+		$("#tabs div img:eq(" + index + ")").attr("src", e.favicons[e.favicons.length - 1]);
 	});
 
 	$("#web webview").off("did-stop-loading");
 	$("#web webview").on("did-stop-loading",function(){
+		$(this).blur();
 		var index = $("#web webview").index($(this));
 		if(!$("#topbar input:eq(" + index + ")").is(":focus")){
 			if($(this).attr("src").endsWith("homepage.html")){
@@ -153,20 +188,19 @@ function updateEvents(){
 				$("#topbar input:eq(" + index + ")").val($(this).attr("src"));
 			}
 		}
+		checkForwardBackwardBtns();
+	});
+
+	$("#web webview").off("did-start-loading");
+	$("#web webview").on("did-start-loading",function(){
+		var index = $("#web webview").index($(this));
+		if($(this).attr("src") != $("#topbar input:eq(" + index + ")").val()){
+			$("#tabs div img:eq(" + index + ")").attr("src","assets/img/loader.gif");
+		}
 	});
 
 	$("#web webview.activeWeb")[0].addEventListener("new-window",(e) => {
 		addTab(e.url);
-	});
-	$("#web webview.activeWeb")[0].addEventListener("page-title-updated",(e) => {
-		var index = $("#web webview").index($(this));
-
-		$("#tabs div h1:eq(" + index + ")").text(e.title);
-	});
-	$("#web webview.activeWeb")[0].addEventListener("page-favicon-updated",(e) => {
-		var index = $("#web webview").index($(this));
-
-		$("#tabs div img:eq(" + index + ")").attr("src", e.favicons[0]);
 	});
 
 	$("#topbar input").off("focus");
