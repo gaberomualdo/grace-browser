@@ -64,18 +64,30 @@
 <body>
 	<script>
 	console.clear();
-	function checkOnline(){
-		if(navigator.onLine){
-			let extraData = "?back=" + encodeURIComponent(window.location.href);
-			if(process.mainModule.filename.indexOf('.app') === -1){
-				window.location.href = "index.html" + extraData;
-			}else{
-				window.location.href = "https://xtrp.github.io/grace/index.html" + extraData;
+	function getQueryVariable(variable){
+		var query = window.location.search.substring(1);
+		var vars = query.split("&");
+		for (var i=0;i<vars.length;i++) {
+			var pair = vars[i].split("=");
+			if(pair[0] == variable){
+				return pair[1];
 			}
 		}
+		return(false);
 	}
-	checkOnline();
-	setInterval(checkOnline, 500);
+	if(!getQueryVariable("web")){
+		function checkOnline(){
+			if(navigator.onLine){
+				if(process.mainModule.filename.indexOf('.app') === -1){
+					window.location.href = "index.html";
+				}else{
+					window.location.href = "https://xtrp.github.io/grace/index.html";
+				}
+			}
+		}
+		checkOnline();
+		setInterval(checkOnline, 500);
+	}
 	</script>
 	<div class="container">
 		<h1>No Internet Connection</h1>
@@ -162,7 +174,12 @@
 		}
 		if(!first){
 			document.querySelector(".score").innerHTML = "Score: " + (trail.length - 1);
-			document.querySelector(".high").innerHTML = "High Score: " + localStorage.getItem("grace-snake-game-high-score");
+			if(localStorage.getItem("grace-snake-game-high-score") != null){
+				console.log(localStorage.getItem("grace-snake-game-high-score"));
+				document.querySelector(".high").innerHTML = "High Score: " + localStorage.getItem("grace-snake-game-high-score");
+			}else{
+				document.querySelector(".high").innerHTML = "High Score: 0";
+			}
 		}
 
 	},100);

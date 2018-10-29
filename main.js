@@ -8,6 +8,7 @@ const path = require('path')
 const url = require('url')
 
 const appMenu = electron.Menu;
+const ipc = require('electron').ipcMain;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -15,7 +16,7 @@ let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 800,'minWidth': 700,'minHeight': 700})
+  mainWindow = new BrowserWindow({width: 800, height: 800,'minWidth': 700,'minHeight': 700,webPreferences: {webSecurity: false}})
 
   // Remove Menu Bar
   mainWindow.setMenu(null);
@@ -57,6 +58,16 @@ app.on('ready', function(){
           type: "separator"
         },
         {
+          label: "Preferences",
+          accelerator: "CmdOrCtrl+,",
+          click: function(){
+            mainWindow.webContents.send('menuFunction', 'preferences');
+          }
+        },
+        {
+          type: "separator"
+        },
+        {
           label: "Reload Grace",
           accelerator: "CmdOrCtrl+Option+R",
           click: function(){
@@ -75,6 +86,42 @@ app.on('ready', function(){
           accelerator: "CmdOrCtrl+Q",
           click: function(){
             app.quit();
+          }
+        }
+      ]
+    },
+    {
+      label: "File",
+      submenu: [
+        {
+          label: "New Tab",
+          accelerator: "CmdOrCtrl+T",
+          click: function(){
+            mainWindow.webContents.send('menuFunction', 'newtab');
+          }
+        },
+        {
+          label: "Close Tab",
+          accelerator: "CmdOrCtrl+W",
+          click: function(){
+            mainWindow.webContents.send('menuFunction', 'closetab');
+          }
+        },
+        {
+          label: "Reload Tab",
+          accelerator: "CmdOrCtrl+R",
+          click: function(){
+            mainWindow.webContents.send('menuFunction', 'reload');
+          }
+        },
+        {
+          type: "separator"
+        },
+        {
+          label: "Print",
+          accelerator: "CmdOrCtrl+P",
+          click: function(){
+            mainWindow.webContents.send('menuFunction', 'print');
           }
         }
       ]
@@ -116,7 +163,30 @@ app.on('ready', function(){
           selector: "selectAll:"
         }
       ]
-    }
+    },
+    {
+      label: "Developer",
+      submenu: [
+        {
+          label: "Open Dev Tools",
+          accelerator: "CmdOrCtrl+Shift+C",
+          click: function(){
+            mainWindow.webContents.send('menuFunction', 'devtools');
+          }
+        }
+      ]
+    }/*,
+    {
+      label: "Sites",
+      submenu: [
+        {
+          label: "browser.grace",
+          click: function(){
+            mainWindow.webContents.send('openSite', 'browser.grace');
+          }
+        }
+      ]
+    }*/
   ]
 
   const menu = appMenu.buildFromTemplate(template);
@@ -138,7 +208,4 @@ app.on('activate', function () {
   if (mainWindow === null) {
     createWindow()
   }
-})
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+});

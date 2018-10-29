@@ -9,9 +9,24 @@
 body {
 	overflow-x: hidden;
 	color: #222;
+	background-color: #fff;
 }
 input {
 	color: #222;
+}
+.iframeOfflineContainer {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 9999;
+	background-color: #fff;
+}
+.iframeOfflineContainer iframe {
+	width: 100%;
+	height: 100%;
+	border: none;
 }
 
 #tabs, #topbar {
@@ -122,6 +137,10 @@ input {
 	fill: #222;
 	border-radius: 50%;
 }
+#topbar button.settings {
+	margin-right: 0;
+	margin-left: 0.5rem;
+}
 #topbar button:not(.disabled):hover{
 	background-color: #dedede;
 }
@@ -141,7 +160,7 @@ input {
 	padding: 0 0.5rem;
 	outline: none;
 	box-sizing: border-box;
-	width: calc(100vw - 8.5rem);
+	width: calc(100vw - 11rem);
 	font-size: 0.875rem;
 }
 #topbar input:focus {

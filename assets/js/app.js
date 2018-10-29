@@ -1,4 +1,14 @@
 var allTabs = ["homepage.html"];
+var allHistory = JSON.parse(localStorage.getItem("grace-all-history")) || [];
+
+// REMOVE SOON
+function openSettings(){
+	if($("#web webview.activeWeb").attr("src").endsWith("homepage.html")){
+		$("#web webview.activeWeb").attr("src", 'https://xtrp.github.io/grace_sites/browser.grace/');
+	}else{
+		addTab('https://xtrp.github.io/grace_sites/browser.grace/');
+	}
+}
 
 $(function(){
 	updateEvents();
@@ -42,7 +52,7 @@ function addTab(url){
 	$('<div class="activeTab"><img src="assets/img/loader.gif" onerror="this.setAttribute(\"src\",\"favicon.png\")"><h1>New Tab</h1><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg></span></div>').insertAfter($("#tabs div:eq(" + (allTabs.length-2) +")"));
 
 	$("#web webview.activeWeb").removeClass("activeWeb");
-	$("<webview class='activeWeb' src='" + url + "'></webview>").insertAfter($("#web webview:eq(" + (allTabs.length-2) +")"));
+	$("<webview class='activeWeb' src='" + url + "' disablewebsecurity></webview>").insertAfter($("#web webview:eq(" + (allTabs.length-2) +")"));
 
 	$("#topbar input.activeInput").removeClass("activeInput");
 	$('<input class="activeInput" type="text" placeholder="Type URL or Search Google...">').insertAfter($("#topbar input:eq(" + (allTabs.length-2) +")"));
@@ -152,6 +162,16 @@ function updateEvents(){
 				url = "https://" + url;	
 			}
 
+			var fakeA = document.createElement("a");
+			fakeA.href = url;
+			if(fakeA.hostname.endsWith(".grace")){
+				url = url.replace("https://", "https://xtrp.github.io/grace_sites/");
+				url = url.replace("http://", "https://xtrp.github.io/grace_sites/");
+				if(url.endsWith(".grace")){
+					url += "/";
+				}
+			}
+
 			var index = $("#tabs div").index($("#tabs div.activeTab"));
 
 			$("#web webview:eq(" + index + ")")[0].loadURL(url);
@@ -159,44 +179,44 @@ function updateEvents(){
 		}
 	});
 
-	$("#web webview").off("dom-ready");
-	$("#web webview").on("dom-ready",function(){
-		var index = $("#web webview").index($(this));
-		if($("#tabs div img:eq(" + index + ")").attr("src") == "assets/img/loader.gif"){
-			$("#tabs div img:eq(" + index + ")").attr("src", "favicon.png");
-		}
-	});
-
 	$("#web webview.activeWeb")[0].addEventListener("page-title-updated",(e) => {
 		var index = $("#web webview").index($(this));
 		$("#tabs div h1:eq(" + index + ")").text(e.title);
 	});
-	$("#web webview.activeWeb")[0].addEventListener("page-favicon-updated",(e) => {
+	
+	$("#web webview").off("did-start-loading");
+	$("#web webview").on("did-start-loading",function(){
 		var index = $("#web webview").index($(this));
-
-		$("#tabs div img:eq(" + index + ")").attr("src", e.favicons[e.favicons.length - 1]);
+		$("#tabs div img:eq(" + index + ")").attr("src","assets/img/loader.gif");
 	});
 
 	$("#web webview").off("did-stop-loading");
 	$("#web webview").on("did-stop-loading",function(){
 		$(this).blur();
 		var index = $("#web webview").index($(this));
+		if(allHistory[allHistory.length - 1] != $(this).attr("src")){
+			allHistory.push($(this).attr("src"));
+		}
+		localStorage.setItem("grace-all-history",JSON.stringify(allHistory));
 		if(!$("#topbar input:eq(" + index + ")").is(":focus")){
 			if($(this).attr("src").endsWith("homepage.html")){
 				$("#topbar input:eq(" + index + ")").val("");
 			}else{
-				$("#topbar input:eq(" + index + ")").val($(this).attr("src"));
+				if($(this).attr("src").startsWith("https://xtrp.github.io/grace_sites/") && $(this).attr("src") != "https://xtrp.github.io/grace_sites/"){
+					console.log("test");
+					var newVal = $(this).attr("src").replace("https://xtrp.github.io/grace_sites/", "https://");
+					$("#topbar input:eq(" + index + ")").val(newVal);
+				}else{
+					$("#topbar input:eq(" + index + ")").val($(this).attr("src"));
+				}
 			}
 		}
-		checkForwardBackwardBtns();
-	});
-
-	$("#web webview").off("did-start-loading");
-	$("#web webview").on("did-start-loading",function(){
-		var index = $("#web webview").index($(this));
-		if($(this).attr("src") != $("#topbar input:eq(" + index + ")").val()){
-			$("#tabs div img:eq(" + index + ")").attr("src","assets/img/loader.gif");
+		if($(this).attr("src").endsWith("homepage.html")){
+			$("#tabs div img:eq(" + index + ")").attr("src", "assets/img/icon_no_border.png");
+		}else{
+			$("#tabs div img:eq(" + index + ")").attr("src", "https://www.google.com/s2/favicons?domain=" + $(this).attr("src").split("?")[0]);
 		}
+		checkForwardBackwardBtns();
 	});
 
 	$("#web webview.activeWeb")[0].addEventListener("new-window",(e) => {
