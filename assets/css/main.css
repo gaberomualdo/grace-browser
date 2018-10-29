@@ -22,6 +22,7 @@ input {
 	left: 0;
 	z-index: 9999;
 	background-color: #fff;
+	overflow: hidden;
 }
 .iframeOfflineContainer iframe {
 	width: 100%;
