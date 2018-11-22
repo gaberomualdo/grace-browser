@@ -1,8 +1,7 @@
 var allTabs = ["homepage.html"];
 var allHistory = JSON.parse(localStorage.getItem("grace-all-history")) || [];
 
-// REMOVE SOON
-function openSettings(){
+function openGraceWebsite(){
 	if($("#web webview.activeWeb").attr("src").endsWith("homepage.html")){
 		$("#web webview.activeWeb").attr("src", 'https://xtrp.github.io/grace_sites/browser.grace/');
 	}else{
