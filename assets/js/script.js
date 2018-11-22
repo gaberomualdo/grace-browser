@@ -20,8 +20,11 @@ ipc.on('menuFunction', function (event, arg) {
 		case "devtools":
 			$("#web webview.activeWeb")[0].openDevTools();
 			break;
+		case "print":
+			$("#web webview.activeWeb")[0].print();
+			break;
 		default:
-			console.log("Error: menuFunction \"" + arg + "\" not found.");
+			console.error("Error: menuFunction \"" + arg + "\" not found.");
 			break;
 	}
 });
