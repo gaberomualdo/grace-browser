@@ -14,8 +14,9 @@
   "pack:win64": "electron-packager . $npm_package_productName --out=dist/win --platform=win32 --arch=x64 --version=0.36.2 app-version=1.0 --icon=icon.ico",
   "build": "npm run pack:osx && npm run pack:win32 && npm run pack:win64",
   "devDependencies": {
-    "electron": "~3.0.5",
+    "electron": "https://github.com/castlabs/electron-releases#v4.0.0-wvvmp-beta.7",
     "electron-builder": "^20.4.1",
+    "electron-installer-dmg": "^2.0.0",
     "electron-packager": "^11.1.0"
   }
 }
